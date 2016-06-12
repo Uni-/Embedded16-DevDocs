@@ -1,17 +1,31 @@
 Pot client - RTS SPI Protocol
 =============================
 
-copied from [handwritten draft](./draft.jpg).
+iPot DevDoc 001
 
-1. Schematic
-------------
+This document describes serial communication between the pot client and its realtime subsystem.
+
+1. Introduction
+---------------
+
+**1.1. Background**
+
+While the pot side of iPot system typically consists a Raspberry Pi 3B with Linux, it cannot guarantee to be reliable for collecting real world sensor data (Linux provides RT_PREEMPT). Furthermore, many sort of sensors, watering and lighting features came out that they have level/shifting issues.
+
+The client *realtime subsystem*, or client RTS for short, is added to solve these issues. Client RTS manages the physical subsystem in real time, running a designated AVR series microprocessor on a specially designed circuit board.
+
+**1.2. SPI**
 
 ![](./schematic.png)
 
+Communication between the pot client and RTS is suggested to be run over a duplex serial communication channel called *serial peripheral interface bus* or SPI.
+
+SPI is not a well-designed reliable communication channel, but rather a face-to-face sequential bit-shifting registers with clock edge and enable signal. Therefore it has no slave acknowledgement, no flow control from slave, no parity check.
+
+For details, see [Wikipedia article on SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus).
+
 2. Timing
 ---------
-
-\* SPI has no flow control from slave.
 
 ![](./timing.png)
 
