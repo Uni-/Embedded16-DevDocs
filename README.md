@@ -8,5 +8,6 @@ See [iPot team Trello board](https://trello.com/b/WOhOkObd) for further informat
 Contents
 --------
 
-* [Pot client - RTS subsystem serial protocol](./rts-protocol/SPECIFICATION.md)
-* iPot control server - pot client network protocol
+* [template for documents](./000-template/EXAMPLE.md)
+* [realtime subsystem serial protocol](./001-rts-serial/SPECIFICATION.md)
+* [control server - pot client networking](./002-server-client/MANUAL.md)
