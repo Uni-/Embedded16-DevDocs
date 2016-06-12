@@ -6,14 +6,14 @@ copied from [handwritten draft](./draft.jpg).
 1. Schematic
 ------------
 
-![](./schematic.svg)
+![](./schematic.png)
 
 2. Timing
 ---------
 
 \* SPI has no flow control from slave.
 
-![](./timing.svg)
+![](./timing.png)
 
 3. Payload
 ----------
@@ -22,7 +22,7 @@ copied from [handwritten draft](./draft.jpg).
 
 fixed width 32bit
 
-![](./frame-request.svg)
+![](./frame-request.png)
 
 * **V**: version. must be 0.
 * **W**: write to device. (0: read, 1: write)
@@ -35,7 +35,7 @@ fixed width 32bit
 
 fixed width 32bit
 
-![](./frame-response.svg)
+![](./frame-response.png)
 
 * **V**: version. must be 0.
 * **OK**: result ok from RTS. (0: ok, 1: bad)
