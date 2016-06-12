@@ -29,6 +29,8 @@ For details, see [Wikipedia article on SPI](https://en.wikipedia.org/wiki/Serial
 
 ![](./timing.png)
 
+WIP
+
 3. Payload
 ----------
 
@@ -38,12 +40,15 @@ fixed width 32bit
 
 ![](./frame-request.png)
 
-* **V**: version. must be 0.
+* **V**: version, must be 0.
 * **W**: write to device. (0: read, 1: write)
-* **R**: reserved. must be 0.
-* **RID**: request id. arbitrary.
-* **DID**: device id. described in Section 4.
-* **data**: read operation parameter, or data to write to device.
+* **R**: reserved, must be 0.
+* **P**: parity, odd; the number of set bit over whole payload should be odd by manipulating this parity bit.
+* **RID**: request id, arbitrary value the requesting side assigns.
+* **DID**: device id, described in Section 4.
+* **data**: parameter to the requesting operation;
+  * if W is read, device reading parameter, depending on the device.
+  * if W is write, data to write to the device.
 
 **3.2. Response**
 
@@ -51,19 +56,73 @@ fixed width 32bit
 
 ![](./frame-response.png)
 
-* **V**: version. must be 0.
+* **V**: version, must be 0.
 * **OK**: result ok from RTS. (0: ok, 1: bad)
-* **R**: reserved. must be 0.
-* **RID**: request id. same value as the corresponding request it follows.
-* **DID**: device id. described in Section 4.
-* **data**:
+* **R**: reserved, must be 0.
+* **P**: parity, odd; the number of set bit over whole payload should be odd by manipulating this parity bit.
+* **RID**: request id, same value as the corresponding request it follows.
+* **DID**: device id, described in Section 4.
+* **data**: result of the requested operation it follows;
   * if OK is ok, the read data (req W=r) or the written data (req W=w).
   * if OK is bad, ERRNO, described in Section 5.
 
 4. Device
 ---------
 
-TBD.
+Every request is an operation, read or write, over a _device_. In other words, each device is an abstraction that represents an accessible field bound to some physical/logical attributes of RTS. Some devices are both readable and writable. Some others are not; they can be readable-only, writable-only, or totally unavailable in some context.
+
+Each device is assigned one byte device ID, used in request and response as DID.
+
+* 2'h0x: information over RTS itself and supporting components
+* 2'h1x: sensing on air condition
+* 2'h2x: sensing on soil condition
+* 2'h3x: sensing on other condition
+* 2'h4x ~ 2'h7x: reserved for further sensing
+* 2'h8x: manipulation over RTS itself and supporting components
+* 2'h9x: motivating on air condition
+* 2'hax: motivating on soil condition
+* 2'hbx: motivating on other condition
+* 2'hcx ~ 2'hfx: reserved for further motivating
+
+**2'h00: system alive**
+
+This device is readable and writable.
+
+Read - No parameter. Data part of request is ignored. returns OK=ok/data=zero if alive and working normal. Some abnormal cases cause no response.
+
+Write - Any writing attempt will restart RTS immediately with no response, if possible. RTS will try to boot normally, but the result is not certain.
+
+**2'h01: water tank level**
+
+**2'h02: saucer water level**
+
+**2'h10: air sensors availability**
+
+**2'h11: air humidity**
+
+**2'h12: air temperature**
+
+**2'h20: soil sensors availability**
+
+**2'h21: soil humidity**
+
+**2'h30: other sensors availability**
+
+**2'h31: light intensity**
+
+**2'h80: system tick**
+
+**2'h90: air motivators availability**
+
+**2'h91: water spray motor**
+
+**2'ha0: soil motivators availability**
+
+**2'ha1: water pump motor**
+
+**2'hb0: other motivators availability**
+
+**2'hb1: lamp**
 
 5. Error
 --------
