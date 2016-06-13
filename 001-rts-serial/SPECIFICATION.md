@@ -91,8 +91,9 @@ This device is readable and writable.
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
 * Response: OK=ok/data=zero if alive and working normal. Some abnormal cases cause no response.
+
 **Write**
-Any writing attempt will restart RTS immediately with no response, if possible. RTS will try to boot normally, but the result is not certain.
+* Any writing attempt will restart RTS immediately with no response, if possible. RTS will try to boot normally, but the result is not certain.
 
 ### 2'h01: water tank level
 
