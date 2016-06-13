@@ -84,47 +84,115 @@ Each device is assigned one byte device ID, used in request and response as DID.
 * 2'hbx: motivating on other condition
 * 2'hcx ~ 2'hfx: reserved for further motivating
 
-**2'h00: system alive**
+### 2'h00: system alive
 
 This device is readable and writable.
 
-Read - No parameter. Data part of request is ignored. returns OK=ok/data=zero if alive and working normal. Some abnormal cases cause no response.
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: OK=ok/data=zero if alive and working normal. Some abnormal cases cause no response.
+**Write**
+Any writing attempt will restart RTS immediately with no response, if possible. RTS will try to boot normally, but the result is not certain.
 
-Write - Any writing attempt will restart RTS immediately with no response, if possible. RTS will try to boot normally, but the result is not certain.
+### 2'h01: water tank level
 
-**2'h01: water tank level**
+This device is readable only.
 
-**2'h02: saucer water level**
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents the water level; 0(4'h0000) if tank is empty, -1(4'hffff) if tank has water.
 
-**2'h10: air sensors availability**
+### 2'h02: saucer water level
 
-**2'h11: air humidity**
+This device is readable only.
 
-**2'h12: air temperature**
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents the water level; 0(4'h0000) if saucer is empty, -1(4'hffff) if saucer has water.
 
-**2'h20: soil sensors availability**
+### 2'h10: air sensors availability
 
-**2'h21: soil humidity**
+This device is readable only.
 
-**2'h30: other sensors availability**
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h10 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h1f assigned to bit 15 (MSB).
 
-**2'h31: light intensity**
+### 2'h11: air humidity
 
-**2'h80: system tick**
+This device is readable only.
 
-**2'h90: air motivators availability**
+**Read**
+* Request. No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response. Data part of the response represents the relative humidity of air multiplied by 1000; i.e. \[0, 1000\] in integer, dividing it by 10 gets the relative humidity in percentage.
 
-**2'h91: water spray motor**
+### 2'h12: air temperature
 
-**2'ha0: soil motivators availability**
+This device is readable only.
 
-**2'ha1: water pump motor**
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents the temperature of air in degree Celsius multiplied by 10; e.g. 273 means 27.3 degree Celsius, so dividing it by 10 gets the relative humidity in percentage.
 
-**2'hb0: other motivators availability**
+### 2'h20: soil sensors availability
 
-**2'hb1: lamp**
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h20 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h2f assigned to bit 15 (MSB).
+
+### 2'h21: soil humidity
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents the relative humidity of soil multiplied by 1000; i.e. \[0, 1000\] in integer, dividing it by 10 gets the relative humidity in percentage.
+
+### 2'h30: other sensors availability
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB).
+
+### 2'h31: light intensity
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents illuminance in Lux, varying over \[0, 40000\] in integer.
+
+### 2'h80: system tick
+
+### 2'h90: air motivators availability
+
+### 2'h91: water spray motor
+
+### 2'ha0: soil motivators availability
+
+### 2'ha1: water pump motor
+
+### 2'hb0: other motivators availability
+
+### 2'hb1: primary lamp
+
+This device is writable only.
+
+### 2'hb1: secondary lamp
+
+This device is writable only.
 
 5. Error
 --------
 
 TBD.
+
+4'h0000: E_STATUS_NONCE.
+4'h0000: E_STATUS_WAIT.
+4'h0000: E_ERROR_UNKNOWN.
+4'h0000: E_ERROR_INITIALIZATION_FAILURE.
+4'h0000: E_ERROR_UNSUPPORTED_OPERATION.
