@@ -152,13 +152,13 @@ This device is readable only.
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
 * Response: Data part represents illuminance in Lux, varying over \[0, 40000\] in integer.
 
-### 2'h40: water tank availability
+### 2'h40: water sensors availability
 
 This device is readable only.
 
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB).
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h40 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h4f assigned to bit 15 (MSB).
 
 ### 2'h41: water tank level
 
@@ -168,15 +168,7 @@ This device is readable only.
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
 * Response: Data part represents the water level; 0(4'h0000) if tank is empty, -1(4'hffff) if tank has water.
 
-### 2'h42: saucer water availability
-
-This device is readable only.
-
-**Read**
-* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB).
-
-### 2'h43: saucer water level
+### 2'h42: saucer water level
 
 This device is readable only.
 
