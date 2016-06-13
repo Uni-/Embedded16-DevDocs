@@ -76,8 +76,9 @@ Each device is assigned one byte device ID, used in request and response as DID.
 * 2'h0x: information over RTS itself and supporting components
 * 2'h1x: sensing on air condition
 * 2'h2x: sensing on soil condition
-* 2'h3x: sensing on other condition
-* 2'h4x ~ 2'h7x: reserved for further sensing
+* 2'h3x: sensing on light condition
+* 2'h4x: sensing on water condition
+* 2'h5x ~ 2'h7x: reserved for further sensing
 * 2'h8x: manipulation over RTS itself and supporting components
 * 2'h9x: motivating on air condition
 * 2'hax: motivating on soil condition
@@ -94,22 +95,6 @@ This device is readable and writable.
 
 **Write**
 * Any writing attempt will restart RTS immediately with no response, if possible. RTS will try to boot normally, but the result is not certain.
-
-### 2'h01: water tank level
-
-This device is readable only.
-
-**Read**
-* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Data part represents the water level; 0(4'h0000) if tank is empty, -1(4'hffff) if tank has water.
-
-### 2'h02: saucer water level
-
-This device is readable only.
-
-**Read**
-* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Data part represents the water level; 0(4'h0000) if saucer is empty, -1(4'hffff) if saucer has water.
 
 ### 2'h10: air sensors availability
 
@@ -151,7 +136,7 @@ This device is readable only.
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
 * Response: Data part represents the relative humidity of soil multiplied by 1000; i.e. \[0, 1000\] in integer, dividing it by 10 gets the relative humidity in percentage.
 
-### 2'h30: other sensors availability
+### 2'h30: light sensors availability
 
 This device is readable only.
 
@@ -166,6 +151,38 @@ This device is readable only.
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
 * Response: Data part represents illuminance in Lux, varying over \[0, 40000\] in integer.
+
+### 2'h40: water tank availability
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB).
+
+### 2'h41: water tank level
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents the water level; 0(4'h0000) if tank is empty, -1(4'hffff) if tank has water.
+
+### 2'h42: saucer water availability
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB).
+
+### 2'h43: saucer water level
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Data part represents the water level; 0(4'h0000) if saucer is empty, -1(4'hffff) if saucer has water.
 
 ### 2'h80: system tick
 
