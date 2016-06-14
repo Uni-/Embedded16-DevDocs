@@ -228,7 +228,7 @@ This device is writable only.
 * Request: Data part should be 0 or 1 that represents lamp off and on respectively.
 * Response: If the lamp is lightable, RTS will respond with OK=ok. Data part should be ignored while it is expected to be zero.
 
-### 2'hb1: secondary lamp
+### 2'hb2: secondary lamp
 
 This device is writable only.
 
