@@ -82,7 +82,7 @@ Each device is assigned one byte device ID, used in request and response as DID.
 * 2'h8x: manipulation over RTS itself and supporting components
 * 2'h9x: motivating on air condition
 * 2'hax: motivating on soil condition
-* 2'hbx: motivating on other condition
+* 2'hbx: motivating on light condition
 * 2'hcx ~ 2'hfx: reserved for further motivating
 
 ### 2'h00: system alive
@@ -102,7 +102,7 @@ This device is readable only.
 
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h10 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h1f assigned to bit 15 (MSB).
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h10 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h1f assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0007.
 
 ### 2'h11: air humidity
 
@@ -126,7 +126,7 @@ This device is readable only.
 
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h20 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h2f assigned to bit 15 (MSB).
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h20 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h2f assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0003.
 
 ### 2'h21: soil humidity
 
@@ -142,7 +142,7 @@ This device is readable only.
 
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB).
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h30 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h3f assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0003.
 
 ### 2'h31: light intensity
 
@@ -158,7 +158,7 @@ This device is readable only.
 
 **Read**
 * Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
-* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h40 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h4f assigned to bit 15 (MSB).
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of sensing devices of this series, 1 for available and 0 for not. Device 2'h40 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h4f assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0007.
 
 ### 2'h41: water tank level
 
@@ -178,23 +178,63 @@ This device is readable only.
 
 ### 2'h80: system tick
 
+This device is readable and writable.
+
 ### 2'h90: air motivators availability
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of motivating devices of this series, 1 for available and 0 for not. Device 2'h90 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'h9f assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0003.
 
 ### 2'h91: water spray motor
 
+This device is writable only.
+
+**Write**
+* Request: Data part represents the duration motor should run to pump up water and spray it over the pot. It is expected to drain water in speed of 0.5ml/s. The value should be in range of \[0, 32767\]; in other words, down to 4'h0000 (inclusive) and up to 4'h7fff (inclusive).
+* Response: If the motor is runnable, RTS will respond with OK=ok. Data part should be ignored while it is expected to be zero.
+
 ### 2'ha0: soil motivators availability
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of motivating devices of this series, 1 for available and 0 for not. Device 2'hb0 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'hbf assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0003.
 
 ### 2'ha1: water pump motor
 
+This device is writable only.
+
+**Write**
+* Request: Data part represents the duration motor should run to pump up water and pour it onto the pot. It is expected to drain water in speed of 0.5ml/s. The value should be in range of \[0, 32767\]; in other words, down to 4'h0000 (inclusive) and up to 4'h7fff (inclusive).
+* Response: If the motor is runnable, RTS will respond with OK=ok. Data part should be ignored while it is expected to be zero.
+
 ### 2'hb0: other motivators availability
+
+This device is readable only.
+
+**Read**
+* Request: No parameter. Data part is slightly ignored, but recommended to be zero-filled.
+* Response: Always OK=ok. Data part is an array of bitflags. Each bit represents availability of motivating devices of this series, 1 for available and 0 for not. Device 2'hb0 is assigned to bit 0 (LSB), and continued along devices, reaching device 2'hbf assigned to bit 15 (MSB). When in normal case, data is expected to have value 4'h0007.
 
 ### 2'hb1: primary lamp
 
 This device is writable only.
 
+**Write**
+* Request: Data part should be 0 or 1 that represents lamp off and on respectively.
+* Response: If the lamp is lightable, RTS will respond with OK=ok. Data part should be ignored while it is expected to be zero.
+
 ### 2'hb1: secondary lamp
 
 This device is writable only.
+
+**Write**
+* Request: Data part should be 0 or 1 that represents lamp off and on respectively.
+* Response: If the lamp is lightable, RTS will respond with OK=ok. Data part should be ignored while it is expected to be zero.
 
 5. Error
 --------
