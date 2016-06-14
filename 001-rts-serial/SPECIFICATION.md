@@ -192,7 +192,7 @@ This device is readable only.
 
 This device is writable only.
 
-### 2'hb1: secondary lamp
+### 2'hb2: secondary lamp
 
 This device is writable only.
 
