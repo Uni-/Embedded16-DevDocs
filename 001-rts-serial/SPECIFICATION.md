@@ -44,7 +44,7 @@ fixed width 32bit
 * **W**: write to device. (0: read, 1: write)
 * **R**: reserved, must be 0.
 * **P**: parity, odd; the number of set bit over whole payload should be odd by manipulating this parity bit.
-* **RID**: request id, arbitrary value the requesting side assigns.
+* **RID**: request id, non-zero arbitrary value the requesting side assigns.
 * **DID**: device id, described in Section 4.
 * **data**: parameter to the requesting operation;
   * if W is read, device reading parameter, depending on the device.
